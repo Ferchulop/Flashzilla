@@ -70,6 +70,9 @@ struct EditCards: View {
             // Crea la carta con los valores proporcionados
             let card = Card(prompt: trimmedPrompt, answer: trimmedAnswer)
             cards.insert(card, at: 0)
+            // CHALLENGE 1
+            newAnswer = ""
+            newPrompt = ""
             saveData()
             
         }
