@@ -23,7 +23,10 @@ struct CardView: View {
                 .background(
                     accessibilityDifferentiateWithoutColor ? nil :
                     RoundedRectangle(cornerRadius: 25)
-                        .fill(offset.width > 0 ? .green : .red)
+                    // CHAllENGE 2
+                        .fill(offset.width > 0 ? .green : .red.opacity(Double(abs(offset.width / 50))))
+                                                
+                       
                     
                 )
                 .shadow(radius: 10)
@@ -65,7 +68,9 @@ struct CardView: View {
                         removal?()
                         
                     } else {
-                        offset = .zero
+                            offset = .zero
+                            
+                        
                     }
                     
                 }
@@ -76,6 +81,9 @@ struct CardView: View {
         }
         // Genera un efecto de rebote al desplazar la card
         .animation(.bouncy, value: offset)
+      
+
+        
     }
 }
 
