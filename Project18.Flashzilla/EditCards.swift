@@ -68,7 +68,7 @@ struct EditCards: View {
             guard trimmedPrompt.isEmpty == false, trimmedAnswer.isEmpty == false else {
                 return }
             // Crea la carta con los valores proporcionados
-            let card = Card(prompt: trimmedPrompt, answer: trimmedAnswer)
+            let card = Card(id: UUID(),prompt: trimmedPrompt, answer: trimmedAnswer)
             cards.insert(card, at: 0)
             // CHALLENGE 1
             newAnswer = ""

@@ -13,29 +13,29 @@ struct CardView: View {
     @State private var offset = CGSize.zero
     @State private var isShowingAnswer = false
     let card: Card
-    var removal: (() -> Void)? = nil
+    var removal: ((Bool) -> Void)? = nil
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 25)
-                .fill(
-                    accessibilityDifferentiateWithoutColor ? .white : .white.opacity(1 - Double(abs(offset.width / 50)))
-                )
-                .background(
-                    accessibilityDifferentiateWithoutColor ? nil :
-                    RoundedRectangle(cornerRadius: 25)
-                    // CHAllENGE 2
-                        .fill(offset.width > 0 ? .green : .red.opacity(Double(abs(offset.width / 50))))
-                                                
-                       
-                    
-                )
-                .shadow(radius: 10)
+            if accessibilityDifferentiateWithoutColor {
+                RoundedRectangle(cornerRadius: 25)
+                    .fill(.white)
+                    .shadow(radius: 10)
+            } else {
+                RoundedRectangle(cornerRadius: 25)
+                    .fill(.white.opacity(1 - Double(abs(offset.width / 50))))
+                    .background(
+                        RoundedRectangle(cornerRadius: 25)
+                            .fill(offset.width > 0 ? .green : .red)
+                            .opacity(Double(abs(offset.width / 50)))
+                    )
+                    .shadow(radius: 10)
+            }
+            
             VStack {
                 if accessibilityVoiceOverEnabled {
                     Text(isShowingAnswer ? card.answer : card.prompt)
                         .font(.largeTitle)
                         .foregroundStyle(.black)
-                        
                 } else {
                     Text(card.prompt)
                         .font(.largeTitle)
@@ -49,7 +49,6 @@ struct CardView: View {
             }
             .padding(20)
             .multilineTextAlignment(.center)
-            
         }
         .frame(width: 450, height: 250)
         .rotationEffect(.degrees(offset.width / 5.0)) // Rota la carta en función del desplazamiento horizontal
@@ -65,16 +64,12 @@ struct CardView: View {
                 .onEnded { _ in
                     // Si el usuario no arrastró más de 100 puntos a la izq o der se ejecuta removal, si no vuelve a su posición original
                     if abs(offset.width) > 100 {
-                        removal?()
-                        
+                        removal?(false)
                     } else {
-                            offset = .zero
-                            
-                        
+                        removal?(true)
+                        offset = .zero
                     }
-                    
                 }
-            
         )
         .onTapGesture {
             isShowingAnswer.toggle()
